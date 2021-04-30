@@ -1,5 +1,6 @@
 const fs = require("fs");
 const promisify = require("util").promisify;
+const config = require("../config/settings");
 
 const FileReader = async (filePath, encoding) => {
   try {
@@ -18,10 +19,12 @@ const FileWriter = async (filePath, data) => {
 };
 function ParkingLotService(filePath) {
   this.filePath = filePath;
-    this.data = await this.getData();
-    this.parkingLotSize = config.parkingLotSize;
+  this.parkingLotSize = config.parkingLotSize;
 }
 
 ParkingLotService.prototype.getData = async function () {
-    return await FileReader(this.filePath, { encoding: 'utf-8' });
+  let data = await FileReader(this.filePath, { encoding: "utf-8" });
+  return data;
 };
+
+module.exports = ParkingLotService;
