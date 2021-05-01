@@ -13,25 +13,22 @@ var ParkingLotServiceDB = new ParkingLotService(
 var app = express();
 var RateLimiter = new Limiter();
 app.use(logger("dev"));
+app.use((req, res, next) => {
+  _ = RateLimiter.start(req);
+  RateLimiter.monitor();
+  if (req.requestlimitObject["xrate-limit-test"]) {
+    next();
+    return;
+  } else {
+    res.status(400).json({ rate_limit: req.requestlimitObject });
+    return;
+  }
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use((req, res, next) => {
-  _ = RateLimiter.start(req);
-  if (
-    "requestlimitObject" in req &&
-    req.requestlimitObject["xrate-limit-test"]
-  ) {
-    next();
-    return;
-  } else {
-    req.requestlimitObject = req.requestlimitObject;
-    res.redirect(301, config.url + "/api/limit");
-    return;
-  }
-});
 
 app.use(
   "/",
@@ -40,13 +37,12 @@ app.use(
   })
 );
 
-app.get("/api/limit", (req, res, next) => {
-  console.log("here we are");
-  if (req.requestlimitObject) {
-    res.status(400).json({ rate_limit: req.requestlimitObject });
-    return;
-  }
-  next();
-});
+// app.get("/api/limit", (req, res, next) => {
+//   console.log("here we are");
+//   if (req.requestlimitObject) {
+//     res.status(400).json({ rate_limit: req.requestlimitObject });
+//     return;
+//   }
+// });
 
 module.exports = app;
