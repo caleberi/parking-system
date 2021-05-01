@@ -20,13 +20,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use((req, res, next) => {
   _ = RateLimiter.start(req);
-  if ("requestlimitObject" in req) {
+  if (
+    "requestlimitObject" in req &&
+    req.requestlimitObject["xrate-limit-test"]
+  ) {
     next();
     return;
   } else {
-    res.rate_limit = {
-      ...req.requestlimitObject,
-    };
+    req.requestlimitObject = req.requestlimitObject;
     res.redirect(301, config.url + "/api/limit");
     return;
   }
@@ -41,8 +42,8 @@ app.use(
 
 app.get("/api/limit", (req, res, next) => {
   console.log("here we are");
-  if (res.rate_limit) {
-    res.status(400).json({ rate_limit: res.rate_limit });
+  if (req.requestlimitObject) {
+    res.status(400).json({ rate_limit: req.requestlimitObject });
     return;
   }
   next();
