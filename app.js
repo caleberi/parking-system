@@ -26,7 +26,7 @@ app.use((req, res, next) => {
     res.rate_limit = {
       ...req.requestlimitObject,
     };
-    res.redirect(301, "/api/limit");
+    res.redirect(301, config.url + "/api/limit");
     return;
   }
 });
@@ -37,5 +37,14 @@ app.use(
     ParkingLotServiceDB,
   })
 );
+
+app.use("/api/limit", (req, res, next) => {
+  console.log("here we are");
+  if (req.rate_limit) {
+    res.status(400).json({ rate_limit: req.rate_limit });
+    return;
+  }
+  next();
+});
 
 module.exports = app;
