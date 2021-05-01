@@ -39,7 +39,7 @@ app.use(
   })
 );
 
-app.use("/api/limit", (req, res, next) => {
+app.get("/api/limit", (req, res, next) => {
   console.log("here we are");
   if (res.rate_limit) {
     res.status(400).json({ rate_limit: res.rate_limit });
