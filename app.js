@@ -5,6 +5,7 @@ var logger = require("morgan");
 var bodyParser = require("body-parser");
 var route = require("./routes/index.route");
 var { Limiter } = require("./lib/index.lib");
+var { Monitor } = require("./lib/RateMonitor");
 var ParkingLotService = require("./service/ParkingLot.service");
 var config = require("./config/settings");
 var ParkingLotServiceDB = new ParkingLotService(
@@ -12,10 +13,11 @@ var ParkingLotServiceDB = new ParkingLotService(
 );
 var app = express();
 var RateLimiter = new Limiter();
+var RateMonitor = new Monitor(RateLimiter);
+RateMonitor.monitor();
 app.use(logger("dev"));
 app.use((req, res, next) => {
   _ = RateLimiter.start(req);
-  RateLimiter.monitor();
   if (req.requestlimitObject["xrate-limit-test"]) {
     next();
     return;
