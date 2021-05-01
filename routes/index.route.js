@@ -7,6 +7,5 @@ module.exports = ({ ParkingLotServiceDB }) => {
     res.status(200).json({ data });
     return;
   });
-
   return router;
 };
