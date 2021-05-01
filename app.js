@@ -39,12 +39,4 @@ app.use(
   })
 );
 
-// app.get("/api/limit", (req, res, next) => {
-//   console.log("here we are");
-//   if (req.requestlimitObject) {
-//     res.status(400).json({ rate_limit: req.requestlimitObject });
-//     return;
-//   }
-// });
-
 module.exports = app;
