@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon --trace-warnings ./bin/www"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

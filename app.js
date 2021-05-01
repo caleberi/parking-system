@@ -10,7 +10,7 @@ var ParkingLotServiceDB = new ParkingLotService(
   path.join(__dirname, "./data/ParkingLot.data.json")
 );
 var app = express();
-
+var RateLimiter = new Limiter();
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use((req, res, next) => {
-  req = new Limiter().start(req);
+  _ = RateLimiter.start(req);
   if ("requestlimitObject" in req) {
     next();
     return;
