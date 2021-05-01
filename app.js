@@ -6,6 +6,7 @@ var bodyParser = require("body-parser");
 var route = require("./routes/index.route");
 var { Limiter } = require("./lib/index.lib");
 var ParkingLotService = require("./service/ParkingLot.service");
+var config = require("./config/settings");
 var ParkingLotServiceDB = new ParkingLotService(
   path.join(__dirname, "./data/ParkingLot.data.json")
 );
@@ -40,8 +41,8 @@ app.use(
 
 app.use("/api/limit", (req, res, next) => {
   console.log("here we are");
-  if (req.rate_limit) {
-    res.status(400).json({ rate_limit: req.rate_limit });
+  if (res.rate_limit) {
+    res.status(400).json({ rate_limit: res.rate_limit });
     return;
   }
   next();

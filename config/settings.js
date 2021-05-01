@@ -7,6 +7,7 @@ environment.staging = {
   env: process.env.NODE_ENV,
   rateCount: parseInt(process.env.RATE_COUNT),
   rateTime: parseInt(process.env.RATE_TIME),
+  url: process.env.APP_URL,
 };
 
 environment.production = {};
