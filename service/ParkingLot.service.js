@@ -17,14 +17,35 @@ const FileWriter = async (filePath, data) => {
     console.log(err.toString());
   }
 };
-function ParkingLotService(filePath) {
-  this.filePath = filePath;
-  this.parkingLotSize = config.parkingLotSize;
-}
 
-ParkingLotService.prototype.getData = async function () {
-  let data = await FileReader(this.filePath, { encoding: "utf-8" });
-  return data;
-};
+class ParkingLotService {
+  constructor(filePath) {
+    this.filePath = filePath;
+    this.parkingLotSize = config.parkingLotSize;
+  }
+  async getData() {
+    let data = await FileReader(this.filePath, { encoding: "utf-8" });
+    return data;
+  }
+
+  async addSlot() {
+    try {
+      let data = await this.getData();
+      let keys = Object.keys(data).sort((a, b) => a - b);
+      let lastid = String(parseInt(keys[keys.length - 1]) + 1);
+      data[lastid] = [];
+      let _ = await FileWriter(this.filePath, data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async getParkingSlotSpace(id, slotNos) {
+    let data = await this.getData();
+    return data.length < config.parkingLotSize
+      ? data[id].filter((item) => item.parkingSlot == slotNos)
+      : new Error("Parking slot is full 🚖");
+  }
+}
 
 module.exports = ParkingLotService;
