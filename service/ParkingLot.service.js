@@ -57,7 +57,33 @@ class ParkingLotService {
     return ret;
   }
 
-  async;
+  async getCarInformation({ carNumber, slotNumber }) {
+    let data = await this.getData();
+    let ret = null;
+    if (carNumber && slotNumber) {
+    } else if (slotNumber) {
+      data = data.filter((item, id) => {
+        if (id == slotNumber) {
+          ret = item;
+        }
+        return item.id != slotNumber;
+      });
+      let _ = await FileWriter(this.filePath, data);
+    } else if (carNumber) {
+      let data = await this.getData();
+      let ret = null;
+      if (carNumber) {
+        data = data.filter((item) => {
+          if (item.carNumber == carNumber) {
+            ret = item;
+          }
+          return item.id != slotNumber;
+        });
+        let _ = await FileWriter(this.filePath, data);
+      }
+      return ret;
+    }
+  }
 }
 
 module.exports = ParkingLotService;
