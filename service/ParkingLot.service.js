@@ -28,23 +28,61 @@ class ParkingLotService {
     return data;
   }
 
-  async addSlot() {
+  async parkCar(car) {
     try {
       let data = await this.getData();
-      let keys = Object.keys(data).sort((a, b) => a - b);
-      let lastid = String(parseInt(keys[keys.length - 1]) + 1);
-      data[lastid] = [];
-      let _ = await FileWriter(this.filePath, data);
+      let canParkCar = data.length < config.parkingLotSize;
+      if (canParkCar) {
+        data.push(car);
+        let _ = await FileWriter(this.filePath, data);
+        return data.length - 1;
+      } else {
+        throw new Error("Parking slot is full 🚖");
+      }
     } catch (err) {
-      console.log(err);
+      return err;
     }
   }
 
-  async getParkingSlotSpace(id, slotNos) {
+  async unParkCar(slotNumber) {
     let data = await this.getData();
-    return data.length < config.parkingLotSize
-      ? data[id].filter((item) => item.parkingSlot == slotNos)
-      : new Error("Parking slot is full 🚖");
+    let ret = null;
+    data = data.filter((item, id) => {
+      if (id == slotNumber) {
+        ret = item;
+      }
+      return item.id != slotNumber;
+    });
+    let _ = await FileWriter(this.filePath, data);
+    return ret;
+  }
+
+  async getCarInformation({ carNumber, slotNumber }) {
+    let data = await this.getData();
+    let ret = null;
+    if (carNumber && slotNumber) {
+    } else if (slotNumber) {
+      data = data.filter((item, id) => {
+        if (id == slotNumber) {
+          ret = item;
+        }
+        return item.id != slotNumber;
+      });
+      let _ = await FileWriter(this.filePath, data);
+    } else if (carNumber) {
+      let data = await this.getData();
+      let ret = null;
+      if (carNumber) {
+        data = data.filter((item) => {
+          if (item.carNumber == carNumber) {
+            ret = item;
+          }
+          return item.id != slotNumber;
+        });
+        let _ = await FileWriter(this.filePath, data);
+      }
+      return ret;
+    }
   }
 }
 

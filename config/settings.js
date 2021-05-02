@@ -8,6 +8,7 @@ environment.staging = {
   rateCount: parseInt(process.env.RATE_COUNT),
   rateTime: parseInt(process.env.RATE_TIME),
   url: process.env.APP_URL,
+  monitorCleanUpTime: parseInt(process.env.RATE_MONTIOR),
 };
 
 environment.production = {};
