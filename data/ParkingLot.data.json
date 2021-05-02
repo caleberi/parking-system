@@ -6,8 +6,7 @@
       "make": "Tesla",
       "model": "3412hLK12",
       "ai_enabled": true
-    },
-    "parkingSlot": 1
+    }
   },
   {
     "id": "2334mIUDjskdn",
@@ -16,8 +15,7 @@
       "make": "BMW",
       "model": "120fjkvnso",
       "ai_enabled": true
-    },
-    "parkingSlot": 1
+    }
   },
   {
     "id": "145929HISKUE",
@@ -26,7 +24,6 @@
       "make": "Camry",
       "model": "weinfe930",
       "ai_enabled": false
-    },
-    "parkingSlot": 1
+    }
   }
 ]
