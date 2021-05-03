@@ -1,0 +1,29 @@
+[
+  {
+    "id": "12klweRIEEM",
+    "owner": "Caleb",
+    "car_info": {
+      "make": "Tesla",
+      "model": "3412hLK12",
+      "ai_enabled": true
+    }
+  },
+  {
+    "id": "2334mIUDjskdn",
+    "owner": "Mark",
+    "car_info": {
+      "make": "BMW",
+      "model": "120fjkvnso",
+      "ai_enabled": true
+    }
+  },
+  {
+    "id": "145929HISKUE",
+    "owner": "Love",
+    "car_info": {
+      "make": "Camry",
+      "model": "weinfe930",
+      "ai_enabled": false
+    }
+  }
+]
