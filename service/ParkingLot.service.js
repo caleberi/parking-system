@@ -31,58 +31,69 @@ class ParkingLotService {
   async parkCar(car) {
     try {
       let data = await this.getData();
-      let canParkCar = data.length < config.parkingLotSize;
+      let canParkCar = data.length <= config.parkingLotSize;
       if (canParkCar) {
         data.push(car);
         let _ = await FileWriter(this.filePath, data);
         return data.length - 1;
       } else {
-        throw new Error("Parking slot is full 🚖");
+        throw new Error("Parking slot is full 🚖 . try another parking lot");
       }
     } catch (err) {
-      return err;
+      throw new Error(
+        JSON.stringify({
+          message: err.message,
+        })
+      );
     }
   }
 
   async unParkCar(slotNumber) {
     let data = await this.getData();
-    let ret = null;
-    data = data.filter((item, id) => {
-      if (id == slotNumber) {
-        ret = item;
+    if (data.length == 0) {
+      throw new Error(
+        "Trying to unpark a car that is park 🤷‍♀️ may be it has already been unparked before 🚗 🏘 "
+      );
+    }
+    let ret = {};
+    let result = data.filter((item, id) => {
+      if (id == parseInt(slotNumber)) {
+        ret = { carNos: item };
       }
-      return item.id != slotNumber;
+      return id != slotNumber;
     });
-    let _ = await FileWriter(this.filePath, data);
+    let _ = await FileWriter(this.filePath, result);
     return ret;
   }
 
   async getCarInformation({ carNumber, slotNumber }) {
+    slotNumber = parseInt(slotNumber);
     let data = await this.getData();
-    let ret = null;
+    let ret = {};
     if (carNumber && slotNumber) {
-    } else if (slotNumber) {
-      data = data.filter((item, id) => {
-        if (id == slotNumber) {
-          ret = item;
+      data.forEach((item, id) => {
+        if (id == slotNumber && carNumber == item) {
+          ret = { carNos: item, slotNos: id };
         }
-        return item.id != slotNumber;
       });
-      let _ = await FileWriter(this.filePath, data);
+    } else if (slotNumber) {
+      data.forEach((item, id) => {
+        if (id == slotNumber) {
+          ret = { carNos: item, slotNos: id };
+        }
+      });
     } else if (carNumber) {
       let data = await this.getData();
-      let ret = null;
       if (carNumber) {
-        data = data.filter((item) => {
-          if (item.carNumber == carNumber) {
-            ret = item;
+        data = data.forEach((item, id) => {
+          if (item == carNumber) {
+            ret = { carNos: item, slotNos: id };
           }
-          return item.id != slotNumber;
         });
-        let _ = await FileWriter(this.filePath, data);
       }
-      return ret;
+    } else {
     }
+    return ret;
   }
 }
 
